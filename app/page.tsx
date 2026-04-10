@@ -12,6 +12,8 @@ type Message = {
 
 type CopySet = {
   weatherFallback: string
+  settingsLabel: string
+  languageLabel: string
   appTitle: string
   appSubtitle: string
   signInTitle: string
@@ -33,11 +35,14 @@ type CopySet = {
   youLabel: string
   emptyTitle: string
   emptyBody: string
+  liveLabel: string
 }
 
 const copy: Record<Language, CopySet> = {
   en: {
     weatherFallback: "Gold Coast weather",
+    settingsLabel: "Settings",
+    languageLabel: "Language",
     appTitle: "Mood AI",
     appSubtitle: "Mood & Mind Centre Clinician Portal",
     signInTitle: "Secure clinician access",
@@ -66,10 +71,13 @@ const copy: Record<Language, CopySet> = {
     youLabel: "You",
     emptyTitle: "How can I help today?",
     emptyBody:
-      "Search internal clinic knowledge, onboarding guidance, billing processes, and operational procedures."
+      "Search internal clinic knowledge, onboarding guidance, billing processes, and operational procedures.",
+    liveLabel: "Live"
   },
   af: {
     weatherFallback: "Gold Coast weer",
+    settingsLabel: "Instellings",
+    languageLabel: "Taal",
     appTitle: "Mood AI",
     appSubtitle: "Mood & Mind Centre Kliniese Portaal",
     signInTitle: "Veilige kliniese toegang",
@@ -98,7 +106,8 @@ const copy: Record<Language, CopySet> = {
     youLabel: "Jy",
     emptyTitle: "Hoe kan ek vandag help?",
     emptyBody:
-      "Soek interne kliniek kennis, onboarding leiding, fakturering prosesse, en operasionele prosedures."
+      "Soek interne kliniek kennis, onboarding leiding, fakturering prosesse, en operasionele prosedures.",
+    liveLabel: "Regstreeks"
   }
 }
 
@@ -258,7 +267,7 @@ export default function Home() {
 
   if (status === "loading") {
     return (
-      <main className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
+      <main className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-6 text-white">
         <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl">
           <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-white/10" />
           <p className="text-sm text-white/70">{ui.checkingSession}</p>
@@ -269,7 +278,7 @@ export default function Home() {
 
   if (!session?.user) {
     return (
-      <main className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center px-6">
+      <main className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-6 text-white">
         <section className="w-full max-w-xl rounded-[28px] border border-white/10 bg-[#111111] p-8 shadow-2xl">
           <div className="mb-6 flex items-center justify-between">
             <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
@@ -299,7 +308,7 @@ export default function Home() {
           </div>
 
           <div className="mb-6">
-            <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black text-lg font-semibold">
+            <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-semibold text-black">
               M
             </div>
             <h1 className="text-4xl font-semibold tracking-tight">{ui.appTitle}</h1>
@@ -352,12 +361,40 @@ export default function Home() {
             </div>
 
             <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-wide text-white/40">Live</p>
+              <p className="text-xs uppercase tracking-wide text-white/40">{ui.liveLabel}</p>
               <p className="mt-2 text-sm text-white/70">{weatherLabel}</p>
             </div>
           </div>
 
           <div className="mt-auto">
+            <div className="mb-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs uppercase tracking-wide text-white/40">{ui.settingsLabel}</p>
+
+              <div className="mt-3">
+                <p className="mb-2 text-xs text-white/45">{ui.languageLabel}</p>
+                <div className="inline-flex w-full rounded-full border border-white/10 bg-[#0f0f10] p-1">
+                  <button
+                    className={`flex-1 rounded-full px-3 py-2 text-sm ${
+                      language === "en" ? "bg-white text-black" : "text-white/70"
+                    }`}
+                    onClick={() => changeLanguage("en")}
+                    type="button"
+                  >
+                    English
+                  </button>
+                  <button
+                    className={`flex-1 rounded-full px-3 py-2 text-sm ${
+                      language === "af" ? "bg-white text-black" : "text-white/70"
+                    }`}
+                    onClick={() => changeLanguage("af")}
+                    type="button"
+                  >
+                    Afrikaans
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div className="mb-3 rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs uppercase tracking-wide text-white/40">{ui.welcomeUser}</p>
               <p className="mt-2 font-medium">{displayName(session.user.name, session.user.email)}</p>
@@ -382,26 +419,9 @@ export default function Home() {
                 <p className="text-xs text-white/45">{ui.appSubtitle}</p>
               </div>
 
-              <div className="inline-flex rounded-full border border-white/10 bg-white/5 p-1">
-                <button
-                  className={`rounded-full px-3 py-1.5 text-sm ${
-                    language === "en" ? "bg-white text-black" : "text-white/70"
-                  }`}
-                  onClick={() => changeLanguage("en")}
-                  type="button"
-                >
-                  English
-                </button>
-                <button
-                  className={`rounded-full px-3 py-1.5 text-sm ${
-                    language === "af" ? "bg-white text-black" : "text-white/70"
-                  }`}
-                  onClick={() => changeLanguage("af")}
-                  type="button"
-                >
-                  Afrikaans
-                </button>
-              </div>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70">
+                {weatherLabel}
+              </span>
             </div>
           </header>
 
@@ -434,7 +454,11 @@ export default function Home() {
                     key={`${message.role}-${index}`}
                     className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    <div className={`max-w-3xl ${message.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
+                    <div
+                      className={`flex max-w-3xl flex-col ${
+                        message.role === "user" ? "items-end" : "items-start"
+                      }`}
+                    >
                       <div className="mb-2 px-1 text-xs uppercase tracking-wide text-white/35">
                         {message.role === "assistant" ? ui.appTitle : ui.youLabel}
                       </div>
